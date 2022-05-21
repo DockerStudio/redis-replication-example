@@ -1,0 +1,26 @@
+version: '3.9'
+
+services:
+  master:
+    restart: always
+    image: redis:6.2-alpine
+    ports:
+      - "6379:6379"
+    command: redis-server /usr/local/etc/redis/redis.conf
+    healthcheck:
+      test: ['CMD', 'redis-cli', 'ping']
+    volumes:
+      - ./master:/data
+      - ./redis.master.conf:/usr/local/etc/redis/redis.conf:ro
+      
+  slave:
+    restart: always
+    image: redis:6.2-alpine
+    ports:
+      - "6378:6379"
+    command: redis-server /usr/local/etc/redis/redis.conf
+    healthcheck:
+      test: ['CMD', 'redis-cli', 'ping']
+    volumes:
+      - ./slave:/data
+      - ./redis.slave.conf:/usr/local/etc/redis/redis.conf:ro
